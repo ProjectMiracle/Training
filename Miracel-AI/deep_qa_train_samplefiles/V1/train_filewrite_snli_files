@@ -1,0 +1,6 @@
+1	text 1	hypothesis1	entails
+2	text 2	hypothesis2	contradicts
+3	text3	hypothesis3	entails
+4	text 4	hypothesis4	neutral
+5	text5	hypothesis 5	entails
+6	text6	hypothesis6	contradicts

@@ -1,0 +1,13 @@
+# RUN command
+
+python scripts\run_model.py  train_config/snli_decomposable_attention.json
+
+python scripts\run_model.py  train_config/question_answer_lstm.
+
+
+python scripts\run_model.py  train_config/bidaf_squad.json
+
+
+python server.py 50051 train_config/snli_decomposable_attention.json
+
+python server.py 50051  train_config/bidaf_squad.json

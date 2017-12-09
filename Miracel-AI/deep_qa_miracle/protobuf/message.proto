@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+option java_package = "org.allenai.deep_qa";
+
+package deep_qa;
+
+// The service definition
+service SolverService {
+  rpc AnswerQuestion (QuestionRequest) returns (QuestionResponse) {}
+}
+
+// It would be nice if we could match the Instance hierarchy seen in the python and scala code, but
+// that didn't really look feasible to do cleanly in a protobuf.  So, we'll just have this enum,
+// and a few general fields in Instance.
+enum InstanceType {
+  UNDEFINED = 0;
+  TRUE_FALSE = 1;
+  MULTIPLE_TRUE_FALSE = 2;
+  QUESTION_ANSWER = 3;
+  CHARACTER_SPAN = 4;
+}
+
+message Instance {
+  InstanceType type = 1;
+
+  // For TRUE_FALSE and QUESTION_ANSWER instance types, this holds the question text.  For
+  // MULTIPLE_TRUE_FALSE instance types, this will be empty.
+  string question = 2;
+
+  // Empty for TRUE_FALSE and MULTIPLE_TRUE_FALSE instances, holds answer options for
+  // QUESTION_ANSWER instances.
+  repeated string answer_options = 3;
+
+  // Any of the instance types could also have associated background instances.  This stores that.
+  repeated Instance background_instances = 4;
+
+  // MULTIPLE_TRUE_FALSE instances need to be represented this way, to properly deal with
+  // background sentences.  In these instances, all other fields will be empty (except the type),
+  // and this will be populated.
+  repeated Instance contained_instances = 5;
+
+  // Direct answer or other instances need a string background passage. This represents that.
+  // This partially overlaps with background_instances, except that this field expects a single
+  // concatenated string of background knowledge, whlie background_instances takes a collection
+  // of background Instance objects (e.g. tuples).
+  string passage = 6;
+
+}
+
+message QuestionRequest {
+  Instance question = 1;
+}
+
+enum QuestionType {
+  UNDEFINED_QUESTION_TYPE = 0;
+  MULTIPLE_CHOICE = 1;
+  DIRECT_ANSWER = 2;
+}
+
+message QuestionResponse {
+  QuestionType type = 1;
+
+  // This returns one double for each answer option, in the same order in which the answer options
+  // were given.  If there were no answer options (e.g., for TRUE_FALSE instances), this will be a
+  // single double, giving the score of "true". This is only used for multiple choice questions.
+  repeated double scores = 2;
+
+  // This returns one string for the question. This is only used for direct answer questions.
+  string answer = 3;
+}
