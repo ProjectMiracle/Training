@@ -1,0 +1,6 @@
+ chatbot_miracle： 语料文件是db/dgk_shooter_min.conv，来自于 https://github.com/rustch3n/dgk_lost_conv
+原项目地址： https://github.com/qhduan/Seq2Seq_Chatbot_QA
+
+deep_qa_miracle： 词向量下载地址  https://s3-us-west-2.amazonaws.com/allennlp/datasets/glove/glove.6B.300d.txt.gz
+
+原项目地址：https://github.com/allenai/deep_qa
